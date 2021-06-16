@@ -4,13 +4,13 @@ import me.mani123.mineplugin.Commands.home;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public final class MinePlugin extends JavaPlugin{
+import java.util.Objects;
 
-    private static MinePlugin plugin;
+public final class MinePlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        getCommand("home").setExecutor(new home(this));
+        Objects.requireNonNull(getCommand("home")).setExecutor(new home(this));
         //Objects.requireNonNull(getCommand("home")).setExecutor(new home(this));
         getConfig().options().copyDefaults();
         saveDefaultConfig();
