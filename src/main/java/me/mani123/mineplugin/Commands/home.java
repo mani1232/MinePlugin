@@ -67,9 +67,9 @@ public class home implements CommandExecutor, TabCompleter {
         if (args.length == 1 && args[0].equalsIgnoreCase("reload")) {
             if (!(sender instanceof ConsoleCommandSender)) {
                 plugin.reloadConfig();
-                sender.sendMessage(ChatColor.RED + "Reloading the plugin via the game");
+                sender.sendMessage(ChatColor.DARK_GREEN + "Reloading the plugin via the game");
             } else {
-                System.out.println(ChatColor.RED + "Reloading the plugin via the console");
+                System.out.println(ChatColor.DARK_GREEN + "Reloading the plugin via the console");
             }
         }
         return true;
