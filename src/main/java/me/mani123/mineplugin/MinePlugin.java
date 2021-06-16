@@ -1,17 +1,21 @@
 package me.mani123.mineplugin;
 
 import me.mani123.mineplugin.Commands.home;
-import me.mani123.mineplugin.Commands.sethome;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.Objects;
+
 public final class MinePlugin extends JavaPlugin{
+
+    private static MinePlugin plugin;
 
     @Override
     public void onEnable() {
+        Objects.requireNonNull(getCommand("home")).setExecutor(new home(this));
+        getConfig().options().copyDefaults();
+        saveDefaultConfig();
         getServer().getConsoleSender().sendMessage(ChatColor.GREEN + "MinePlugin is enabled");
-        getCommand("home").setExecutor(new home());
-        getCommand("sethome").setExecutor(new sethome());
     }
 
     @Override

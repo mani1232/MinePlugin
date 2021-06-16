@@ -11,8 +11,3 @@ commands:
     aliases:
       - дом
       - домой
-  sethome:
-    description: set location the home
-    aliases:
-      - сетдом
-      - устдом
