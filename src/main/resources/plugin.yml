@@ -8,6 +8,8 @@ website: site.ru
 commands:
   home:
     description: teleport to home
+    usage: /<command> [set/tp/reload]
+    default: true
     aliases:
       - дом
       - домой
