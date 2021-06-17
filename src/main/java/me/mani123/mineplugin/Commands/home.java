@@ -112,12 +112,11 @@ public class home implements CommandExecutor, TabCompleter {
 
     private void notCommand(Player player) {
         player.sendMessage(ChatColor.RED + "You not have home, please enter " + ChatColor.GREEN
-                + "'/home <set, tp, reload>'");
+                + "'/home <set, tp, del, reload>'");
     }
 
     private void saveToConfig(Location location, Player player, World world, String homeName) {
         plugin.getConfig().createSection("savedLocations." + player.getName() + "." + homeName);
-        // plugin.getConfig().set("savedLocations." + player.getName() + ".homeName." + homeName);
         plugin.getConfig().set("savedLocations." + player.getName() + "." + homeName + ".x", location.getX());
         plugin.getConfig().set("savedLocations." + player.getName() + "." + homeName + ".y", location.getY());
         plugin.getConfig().set("savedLocations." + player.getName() + "." + homeName + ".z", location.getZ());
