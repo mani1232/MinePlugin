@@ -19,6 +19,7 @@ public class home implements CommandExecutor, TabCompleter {
 
     MinePlugin plugin;
 
+    public String defaultHome = "home";
     public home(MinePlugin plugin) {
         this.plugin = plugin;
     }
@@ -31,29 +32,42 @@ public class home implements CommandExecutor, TabCompleter {
             Location location = player.getLocation();
             World world = player.getWorld();
             if (plugin.getConfig().getBoolean("Enable")) {
-                if (args.length == 1 && args[0].equalsIgnoreCase("set")) {
-                    if (plugin.getConfig().isConfigurationSection("savedLocations." + player.getName())) {
+                if (args.length == 2 || args.length == 1 && args[0].equalsIgnoreCase("set")) {
+                    if (!plugin.getConfig().isConfigurationSection("savedLocations." + player.getName() + "." + defaultHome)) {
+                        saveToConfig(location, player, world, defaultHome);
+                        player.sendMessage(ChatColor.GOLD + "You set location the home, by default name " + ChatColor.AQUA +
+                                "(" + Math.round(location.getX()) + "," + Math.round(location.getY()) +
+                                "," + Math.round(location.getZ()) + ")");
+                    }else if (!plugin.getConfig().isConfigurationSection("savedLocations." + player.getName() + "." + args[1])) {
                         player.sendMessage(ChatColor.YELLOW + "Your home location set to:" + ChatColor.AQUA
                                 + Math.round(location.getX()) + "," + Math.round(location.getY()) +
                                 "," + Math.round(location.getZ()));
-                        saveToConfig(location, player, world);
-                    } else {
-                        saveToConfig(location, player, world);
-                        player.sendMessage(ChatColor.GOLD + "You set location the home " + ChatColor.AQUA +
-                                "(" + Math.round(location.getX()) + "," + Math.round(location.getY()) +
-                                "," + Math.round(location.getZ()) + ")");
+                        saveToConfig(location, player, world, args[1]);
                     }
-                } else if (args.length == 1 && args[0].equalsIgnoreCase("tp")) {
-                    if (plugin.getConfig().isConfigurationSection("savedLocations." + player.getName())) {
+                }
+                if (args.length == 2 || args.length == 1 && args[0].equalsIgnoreCase("tp")) {
+                    if (plugin.getConfig().isConfigurationSection("savedLocations." + player.getName() + "." + defaultHome) && args.length == 1) {
                         Location go_home = new Location(getServer().getWorld(Objects.requireNonNull(plugin.getConfig()
-                                .getString("savedLocations." + player.getName() + ".world")))
-                                , plugin.getConfig().getDouble("savedLocations." + player.getName() + ".x")
-                                , plugin.getConfig().getDouble("savedLocations." + player.getName() + ".y")
-                                , plugin.getConfig().getDouble("savedLocations." + player.getName() + ".z"),
-                                (float) plugin.getConfig().getDouble("savedLocations." + player.getName() + ".yaw"),
-                                (float) plugin.getConfig().getDouble("savedLocations." + player.getName() + ".pitch"));
+                                .getString("savedLocations." + player.getName() + "." + defaultHome + ".world")))
+                                , plugin.getConfig().getDouble("savedLocations." + player.getName() + "." + defaultHome + ".x")
+                                , plugin.getConfig().getDouble("savedLocations." + player.getName() + "." + defaultHome + ".y")
+                                , plugin.getConfig().getDouble("savedLocations." + player.getName() + "." + defaultHome + ".z"),
+                                (float) plugin.getConfig().getDouble("savedLocations." + player.getName() + "." + defaultHome + ".yaw"),
+                                (float) plugin.getConfig().getDouble("savedLocations." + player.getName() + "." + defaultHome + ".pitch"));
                         player.teleport(go_home);
+                        player.sendMessage(ChatColor.GREEN + "You teleported to home location by default name");
+                    }else if (plugin.getConfig().isConfigurationSection("savedLocations." + player.getName() + "." + args[1])){
+                        Location go_home_custom = new Location(getServer().getWorld(Objects.requireNonNull(plugin.getConfig()
+                                .getString("savedLocations." + player.getName() + "." + args[1] + ".world")))
+                                , plugin.getConfig().getDouble("savedLocations." + player.getName() + "." + args[1] + ".x")
+                                , plugin.getConfig().getDouble("savedLocations." + player.getName() + "." + args[1] + ".y")
+                                , plugin.getConfig().getDouble("savedLocations." + player.getName() + "." + args[1] + ".z"),
+                                (float) plugin.getConfig().getDouble("savedLocations." + player.getName() + "." + args[1] + ".yaw"),
+                                (float) plugin.getConfig().getDouble("savedLocations." + player.getName() + "." + args[1] + ".pitch"));
+                        player.teleport(go_home_custom);
                         player.sendMessage(ChatColor.GREEN + "You teleported to home location");
+                    } else {
+                        player.sendMessage(ChatColor.RED + "House with that name" + args[1] + "does not exist");
                     }
                 }
             } else {
@@ -80,14 +94,15 @@ public class home implements CommandExecutor, TabCompleter {
                 + "'/home <set, tp, reload>'");
     }
 
-    private void saveToConfig(Location location, Player player, World world) {
-        plugin.getConfig().createSection("savedLocations." + player.getName());
-        plugin.getConfig().set("savedLocations." + player.getName() + ".x", location.getX());
-        plugin.getConfig().set("savedLocations." + player.getName() + ".y", location.getY());
-        plugin.getConfig().set("savedLocations." + player.getName() + ".z", location.getZ());
-        plugin.getConfig().set("savedLocations." + player.getName() + ".pitch", location.getPitch());
-        plugin.getConfig().set("savedLocations." + player.getName() + ".yaw", location.getYaw());
-        plugin.getConfig().set("savedLocations." + player.getName() + ".world", world.getName());
+    private void saveToConfig(Location location, Player player, World world, String homeName) {
+        plugin.getConfig().createSection("savedLocations." + player.getName() + "." + homeName);
+        // plugin.getConfig().set("savedLocations." + player.getName() + ".homeName." + homeName);
+        plugin.getConfig().set("savedLocations." + player.getName() + "." + homeName + ".x", location.getX());
+        plugin.getConfig().set("savedLocations." + player.getName() + "." + homeName + ".y", location.getY());
+        plugin.getConfig().set("savedLocations." + player.getName() + "." + homeName + ".z", location.getZ());
+        plugin.getConfig().set("savedLocations." + player.getName() + "." + homeName + ".pitch", location.getPitch());
+        plugin.getConfig().set("savedLocations." + player.getName() + "." + homeName + ".yaw", location.getYaw());
+        plugin.getConfig().set("savedLocations." + player.getName() + "." + homeName + ".world", world.getName());
         plugin.saveConfig();
     }
 
