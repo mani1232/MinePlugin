@@ -7,8 +7,8 @@ description: Minecraft plugin
 website: site.ru
 commands:
   home:
-    description: teleport to home
-    usage: /<command> [set/tp/reload]
+    description: Home commands
+    usage: /<command> [set/tp/reload/del]
     default: true
     aliases:
       - дом
