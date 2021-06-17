@@ -59,7 +59,10 @@ public class home implements CommandExecutor, TabCompleter {
                             (float) plugin.getConfig().getDouble("savedLocations." + player.getName() + "." + defaultHome + ".pitch"));
                     player.teleport(go_home);
                     player.sendMessage(ChatColor.GREEN + "You teleported to home location by default name");
-                } else if (args.length == 2 && args[0].equalsIgnoreCase("tp") ) {
+                } else if (args.length == 1) {
+                    player.sendMessage(ChatColor.RED + "You not set default home, input /home set");
+                }
+                if (args.length == 2 && args[0].equalsIgnoreCase("tp") ) {
                     if (plugin.getConfig().isConfigurationSection("savedLocations." + player.getName() + "." + args[1])) {
                         Location go_home_custom = new Location(getServer().getWorld(Objects.requireNonNull(plugin.getConfig()
                                 .getString("savedLocations." + player.getName() + "." + args[1] + ".world")))
@@ -70,7 +73,7 @@ public class home implements CommandExecutor, TabCompleter {
                                 (float) plugin.getConfig().getDouble("savedLocations." + player.getName() + "." + args[1] + ".pitch"));
                         player.teleport(go_home_custom);
                         player.sendMessage(ChatColor.GREEN + "You teleported to home location");
-                    } else if (plugin.getConfig().isConfigurationSection("savedLocations." + player.getName() + "." + args[1])) {
+                    } else {
                         player.sendMessage(ChatColor.RED + "House with that name " + args[1] + " does not exist");
                     }
                 }
@@ -80,13 +83,15 @@ public class home implements CommandExecutor, TabCompleter {
                     plugin.getConfig().set("savedLocations." + player.getName() + "." + defaultHome, null);
                     plugin.saveConfig();
                     player.sendMessage(ChatColor.YELLOW + "You deleted home: " + defaultHome);
+                }else if (args.length == 1){
+                    player.sendMessage(ChatColor.RED + "You not set default home, input /home set");
                 }
                 if (args.length == 2 && args[0].equalsIgnoreCase("del")) {
                     if (plugin.getConfig().isConfigurationSection("savedLocations." + player.getName() + "." + args[1])) {
                         plugin.getConfig().set("savedLocations." + player.getName() + "." + args[1], null);
                         plugin.saveConfig();
                         player.sendMessage(ChatColor.YELLOW + "You deleted home: " + args[1]);
-                    } else if (plugin.getConfig().isConfigurationSection("savedLocations." + player.getName() + "." + args[1])) {
+                    } else {
                         player.sendMessage(ChatColor.RED + "House with that name " + args[1] + " does not exist");
                     }
                 }
